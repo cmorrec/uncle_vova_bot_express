@@ -1,5 +1,5 @@
 import OpenAITypes, { OpenAI, ClientOptions } from "openai";
-import { encode } from "gpt-3-encoder";
+// import { encode } from "gpt-3-encoder";
 
 import { ChatGPTResponseToSave } from "@repo/index";
 import { config } from "@config";
@@ -16,7 +16,7 @@ const BIG_MODEL = "gpt-4o";
 const MODEL = BIG_MODEL;
 
 const TEMPERATURE = 0.7;
-const MAX_TOKENS = 1800;
+const MAX_TOKENS = 1000;
 const configuration: ClientOptions = {
   apiKey: config.openAIAPIKey,
 };
@@ -30,7 +30,7 @@ export async function getCompletion(
       model: MODEL,
       prompt: requestText,
       temperature: TEMPERATURE,
-      max_tokens: getMaxTokens({ prompt: requestText }),
+      max_tokens: MAX_TOKENS,
     });
 
     return {
@@ -56,7 +56,7 @@ export async function getChat(
         content: e.content,
       })),
       temperature: TEMPERATURE,
-      max_tokens: getMaxTokens({ messages: requestChat }),
+      max_tokens: MAX_TOKENS,
     });
 
     return {
@@ -71,21 +71,21 @@ export async function getChat(
   return undefined;
 }
 
-function getMaxTokens(
-  input: { prompt: string } | { messages: ChatCompletionRequestMessage[] }
-): number {
-  const max = MAX_TOKENS;
-  if ("prompt" in input) {
-    const encodedCompletion = encode(input.prompt);
+// function getMaxTokens(
+//   input: { prompt: string } | { messages: ChatCompletionRequestMessage[] }
+// ): number {
+//   const max = MAX_TOKENS;
+//   if ("prompt" in input) {
+//     const encodedCompletion = encode(input.prompt);
 
-    return max - encodedCompletion.length;
-  } else if ("messages" in input) {
-    const encodedChatTokenNumber = input.messages
-      .map((e) => encode(e.content ?? "").length)
-      .reduce((acc, cur) => acc + cur);
+//     return max - encodedCompletion.length;
+//   } else if ("messages" in input) {
+//     const encodedChatTokenNumber = input.messages
+//       .map((e) => encode(e.content ?? "").length)
+//       .reduce((acc, cur) => acc + cur);
 
-    return max - encodedChatTokenNumber;
-  } else {
-    return 0;
-  }
-}
+//     return max - encodedChatTokenNumber;
+//   } else {
+//     return 0;
+//   }
+// }

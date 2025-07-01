@@ -1,6 +1,9 @@
 import { config } from "@config";
-import app from "./server";
+import { createApp } from "./server";
 
-app.listen(config.port, () =>
-  console.log(`🚀 Server listening on port ${config.port}`)
-);
+(async () => {
+  const app = await createApp();
+  app.listen(config.port, () =>
+    console.log(`🚀 Server listening on port ${config.port}`)
+  );
+})();

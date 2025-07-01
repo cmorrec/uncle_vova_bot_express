@@ -10,6 +10,7 @@ export const config = {
   ownerIds: process.env.OWNER_IDS!,
   port: Number(process.env.PORT),
   webhook: {
+    domain: process.env.WEBHOOK_DOMAIN,
     path: process.env.WEBHOOK_PATH,
     secretToken: process.env.WEBHOOK_SECRET_TOKEN!,
   },
@@ -34,7 +35,10 @@ export const config = {
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(config.mongoDBURI);
+    await mongoose.connect(config.mongoDBURI, {
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
+    });
     console.log("MongoDB connected");
   } catch (err) {
     console.error("MongoDB connection error:", err);

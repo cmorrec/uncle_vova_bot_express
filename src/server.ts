@@ -12,23 +12,29 @@ import registerControllers from "./controllers";
 //   console.log('\n');
 // }, 10000);
 
-const app = express();
-
-(async () => {
+export async function createApp() {
+  const app = express();
+  await connectDB();
   const bot = createBot();
   app.use(express.json());
-  connectDB();
   registerControllers(app);
 
   const webhookPath = config.webhook.path;
-  if (webhookPath) {
-    app.use(bot.webhookCallback(webhookPath));
+  const webhookDomain = config.webhook.domain;
+  if (webhookPath && webhookDomain) {
+    app.use(
+      await bot.createWebhook({
+        domain: webhookDomain,
+        path: webhookPath,
+        // secret_token: config.webhook.secretToken,
+      })
+    );
     // app.use(webhookPath, (req, res) => bot.handleUpdate(req.body, res));
     console.log("Webhook set");
   } else {
-    await bot.launch();
+    bot.launch();
     console.log("Long-polling set");
   }
-})();
 
-export default app;
+  return app;
+}

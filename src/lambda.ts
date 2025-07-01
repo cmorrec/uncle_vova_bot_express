@@ -1,4 +1,13 @@
 import serverlessExpress from "@vendia/serverless-express";
-import app from "./server";
+import { createApp } from "./server";
 
-exports.handler = serverlessExpress({ app });
+let cachedServer: ReturnType<typeof serverlessExpress> | null = null;
+
+exports.handler = async (event: any, context: any) => {
+  if (!cachedServer) {
+    const app = await createApp();
+    cachedServer = serverlessExpress({ app });
+  }
+
+  return cachedServer!(event, context);
+};
