@@ -3,6 +3,15 @@ import { createBot } from "./bot";
 import { config, connectDB } from "./config";
 import registerControllers from "./controllers";
 
+// setInterval(() => {
+//   const used = process.memoryUsage();
+//   console.log('Memory usage:');
+//   for (let key in used) {
+//     console.log(`${key} ${Math.round(used[key as keyof NodeJS.MemoryUsage] / 1024 / 1024 * 100) / 100} MB`);
+//   }
+//   console.log('\n');
+// }, 10000);
+
 (async () => {
   const app = express();
   const bot = createBot();
