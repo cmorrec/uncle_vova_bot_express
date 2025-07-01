@@ -24,8 +24,9 @@ type ResultType = { answer: string; isFormal: boolean };
 
 class AppService {
   private username = config.botUsername;
-  private FORMAL_MENTIONS = [`@${this.username}`, "Темин бот", "бот Темы"];
+  private FORMAL_MENTIONS = ["Темин бот", "бот Темы"];
   private INFORMAL_MENTIONS = [
+    `@${this.username}`,
     config.botName,
     "Дядя Вов",
     "Дядь Вов",
@@ -78,7 +79,11 @@ class AppService {
   async getAnswer(updateDBInfo: UpdateDBInfo): Promise<ResultType | undefined> {
     const { message } = updateDBInfo;
     const text = message?.text ?? message?.caption;
-    if (!message || !text || !availableTextTypes.includes(message.messageType)) {
+    if (
+      !message ||
+      !text ||
+      !availableTextTypes.includes(message.messageType)
+    ) {
       return undefined;
     }
 
