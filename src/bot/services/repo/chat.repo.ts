@@ -28,7 +28,6 @@ class ChatRepo {
     chat: IChat,
     userIds: (string | number | undefined)[]
   ) {
-    console.log('[upsertChatMembers] start')
     const filtered = userIds
       .map((e) => e?.toString())
       .filter((e): e is string => Boolean(e));
@@ -42,7 +41,6 @@ class ChatRepo {
 
       await this.update(chat);
     }
-    console.log('[upsertChatMembers] end')
   }
 }
 

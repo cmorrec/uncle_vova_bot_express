@@ -19,9 +19,7 @@ export async function saveMessageMiddleware(
     const chatId = String(ctxChat.id);
     const userId = String(ctxFrom.id);
 
-    // console.log("[saveMessageMiddleware] chatId", chatId);
     let chat = await chatRepo.getById(chatId);
-    // console.log("[saveMessageMiddleware] chat", chat);
     if (!chat || !chat.active) {
       return undefined;
     }
@@ -35,28 +33,18 @@ export async function saveMessageMiddleware(
     let repliedMessage: IMessage | null = null;
     try {
       if (ctxRepliedMessage) {
-        console.log(
-          "[saveMessageMiddleware] messageId",
-          ctxRepliedMessage?.message_id.toString()
-        );
         repliedMessage = await messageRepo.getByChatAndId({
           chatId: chat?.chatId,
           messageId: ctxRepliedMessage?.message_id.toString(),
         });
-        console.log("[saveMessageMiddleware] message", repliedMessage);
         if (!repliedMessage) {
           repliedMessage = contextMessageToDb({
             message: ctxRepliedMessage,
             now,
             isMainBot: false,
           });
-          console.log(
-            "[saveMessageMiddleware] before creation",
-            repliedMessage
-          );
-          await messageRepo.create(repliedMessage);
 
-          console.log("[saveMessageMiddleware] after creation");
+          await messageRepo.create(repliedMessage);
         }
       }
     } catch (e) {

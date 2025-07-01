@@ -23,7 +23,6 @@ class UserRepo {
   }
 
   async upsertUsers(now: Date, ctxFroms: (From | undefined)[]) {
-    console.log("[upsertUsers] start");
     const filtered = ctxFroms.filter((e): e is From => Boolean(e));
     const uniq = uniqBy(filtered, (e) => e.id.toString());
 
@@ -48,7 +47,6 @@ class UserRepo {
         }
       })
     );
-    console.log("[upsertUsers] end");
   }
 }
 
