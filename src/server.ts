@@ -12,8 +12,9 @@ import registerControllers from "./controllers";
 //   console.log('\n');
 // }, 10000);
 
+const app = express();
+
 (async () => {
-  const app = express();
   const bot = createBot();
   app.use(express.json());
   connectDB();
@@ -28,8 +29,6 @@ import registerControllers from "./controllers";
     await bot.launch();
     console.log("Long-polling set");
   }
-
-  app.listen(config.port, () =>
-    console.log(`🚀 Server listening on port ${config.port}`)
-  );
 })();
+
+export default app;

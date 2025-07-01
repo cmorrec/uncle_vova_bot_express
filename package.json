@@ -4,14 +4,15 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start:dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
+    "start:dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/local.ts",
     "build": "tsc",
-    "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/server.js",
+    "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/lambda.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@vendia/serverless-express": "^4.12.6",
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "gpt-3-encoder": "^1.1.4",
