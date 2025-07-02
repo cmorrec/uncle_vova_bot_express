@@ -16,6 +16,13 @@ export const config = {
   },
   openAIAPIKey: process.env.OPENAI_API_KEY!,
   mongoDBURI: process.env.MONGODB_URI!,
+  temperature: Number(process.env.TEMPERATURE!),
+  defaultMinusMinutes: Number(process.env.DEFAULT_MINUS_MINUTES!),
+  messagesLimit: Number(process.env.MESSAGES_LIMIT!),
+  everyNthMessage: Number(process.env.EVERY_NTH_MESSAGE!),
+  minMessageLength: Number(process.env.MIN_MESSAGE_LENGTH!),
+  maxTokens: Number(process.env.MAX_TOKENS!),
+  model: process.env.MODEL!
 };
 
 // validation
@@ -27,7 +34,14 @@ export const config = {
     !config.ownerIds ||
     !config.port ||
     !config.openAIAPIKey ||
-    !config.mongoDBURI
+    !config.mongoDBURI ||
+    !config.temperature ||
+    !config.defaultMinusMinutes ||
+    !config.messagesLimit ||
+    !config.everyNthMessage ||
+    !config.minMessageLength ||
+    !config.maxTokens ||
+    !config.model
   ) {
     throw new Error("There are no enough envs");
   }

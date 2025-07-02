@@ -10,13 +10,10 @@ export type ChatCompletionRequestMessage = Pick<
   "role" | "content"
 >;
 
-const MEDIUM_MODEL = "gpt-3.5-turbo";
-const BIG_MODEL = "gpt-4o";
+const MODEL = config.model;
 
-const MODEL = BIG_MODEL;
-
-const TEMPERATURE = 0.7;
-const MAX_TOKENS = 1000;
+const TEMPERATURE = config.temperature;
+const MAX_TOKENS = config.maxTokens;
 const configuration: ClientOptions = {
   apiKey: config.openAIAPIKey,
 };
