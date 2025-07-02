@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { IMessage } from "./schemas/interfaces";
 import messageModel from "./schemas/message.schema";
 
@@ -61,6 +62,12 @@ class MessageRepo {
       .limit(1)
       .lean()
       .then((res) => res?.[0] ?? null);
+  }
+
+  async removeOldMessages(sentBefore: DateTime) {
+    return await messageModel.deleteMany({
+      date: { $lt: sentBefore.toJSDate() },
+    });
   }
 }
 
