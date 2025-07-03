@@ -1,0 +1,5 @@
+1) уменьшить потребление оперативной памяти
+  - заменить express на fastify или вообще http
+  - Express по умолчанию грузит много middleware. Отключите лишние middleware app.disable('x-powered-by');
+  - Уменьшите размер бандла с webpack ( webpack-node-externals) или донастрой esbuild
+2)
