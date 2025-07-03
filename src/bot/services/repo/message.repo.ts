@@ -57,7 +57,7 @@ class MessageRepo {
   ) {
     return messageModel
       .find(where)
-      .sort({ date: 1 })
+      .sort({ date: -1 })
       .limit(1)
       .lean()
       .then((res) => res?.[0] ?? null);
