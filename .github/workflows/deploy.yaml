@@ -48,7 +48,7 @@ jobs:
         run: npm run build
 
       - name: Zip Lambda
-        run: zip -r function.zip index.js node_modules
+        run: zip -r function.zip index.js
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
