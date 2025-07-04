@@ -12,25 +12,29 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      OWNER_IDS: ${{ secrets.OWNER_IDS }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      WEBHOOK_DOMAIN: ${{ secrets.WEBHOOK_DOMAIN }}
-      WEBHOOK_SECRET_TOKEN: ${{ secrets.WEBHOOK_SECRET_TOKEN }}
+    permissions:
+      id-token: write
+      contents: read
 
-      WEBHOOK_PATH: /api/webhook
-      TELEGRAM_BOT_USERNAME: uncle_vova_ai_bot
-      TELEGRAM_BOT_NAME: Дядя Вова
-      PORT: 8080
-      DEFAULT_MINUS_MINUTES: 20
-      MESSAGES_LIMIT: 3
-      EVERY_NTH_MESSAGE: 15
-      MIN_MESSAGE_LENGTH: 20
-      TEMPERATURE: 0.7
-      MAX_TOKENS: 1000
-      MODEL: gpt-4o
+    # env:
+    #   MONGODB_URI: ${{ secrets.MONGODB_URI }}
+    #   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+    #   OWNER_IDS: ${{ secrets.OWNER_IDS }}
+    #   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    #   WEBHOOK_DOMAIN: ${{ secrets.WEBHOOK_DOMAIN }}
+    #   WEBHOOK_SECRET_TOKEN: ${{ secrets.WEBHOOK_SECRET_TOKEN }}
+
+    #   WEBHOOK_PATH: /api/webhook
+    #   TELEGRAM_BOT_USERNAME: uncle_vova_ai_bot
+    #   TELEGRAM_BOT_NAME: Дядя Вова
+    #   PORT: 8080
+    #   DEFAULT_MINUS_MINUTES: 20
+    #   MESSAGES_LIMIT: 3
+    #   EVERY_NTH_MESSAGE: 15
+    #   MIN_MESSAGE_LENGTH: 20
+    #   TEMPERATURE: 0.7
+    #   MAX_TOKENS: 1000
+    #   MODEL: gpt-4o
 
     steps:
       - name: Checkout
@@ -56,29 +60,32 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Convert env to JSON
-        id: make_env_json
-        run: |
-          JSON="{"
-          for var in $(compgen -e); do
-            if [[ "$var" =~ ^[A-Za-z0-9_]+$ ]]; then
-              val="${!var}"
-              val_escaped=$(echo "$val" | sed 's/"/\\"/g')
-              JSON+="\"$var\":\"$val_escaped\","
-            fi
-          done
-          JSON="${JSON%,}}"
-          echo "$JSON" > env.json
-          echo "json_env=$JSON" >> $GITHUB_OUTPUT
-
       - name: Update Lambda code
         run: |
           aws lambda update-function-code \
             --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
             --zip-file fileb://function.zip
 
-      - name: Update Lambda environment variables
-        run: |
-          aws lambda update-function-configuration \
-            --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
-            --environment "Variables=${{ steps.make_env_json.outputs.json_env }}"
+      # - name: Update Lambda environment variables
+      #   run: |
+      #     aws lambda update-function-configuration \
+      #       --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
+      #       --environment '{"Variables": {
+      #         "MONGODB_URI": "${{ secrets.MONGODB_URI }}",
+      #         "TELEGRAM_BOT_TOKEN": "${{ secrets.TELEGRAM_BOT_TOKEN }}",
+      #         "OWNER_IDS": "${{ secrets.OWNER_IDS }}",
+      #         "OPENAI_API_KEY": "${{ secrets.OPENAI_API_KEY }}",
+      #         "WEBHOOK_DOMAIN": "${{ secrets.WEBHOOK_DOMAIN }}",
+      #         "WEBHOOK_SECRET_TOKEN": "${{ secrets.WEBHOOK_SECRET_TOKEN }}",
+      #         "WEBHOOK_PATH": "/api/webhook",
+      #         "TELEGRAM_BOT_USERNAME": "uncle_vova_ai_bot",
+      #         "TELEGRAM_BOT_NAME": "Дядя Вова",
+      #         "PORT": "8080",
+      #         "DEFAULT_MINUS_MINUTES": "20",
+      #         "MESSAGES_LIMIT": "3",
+      #         "EVERY_NTH_MESSAGE": "15",
+      #         "MIN_MESSAGE_LENGTH": "20",
+      #         "TEMPERATURE": "0.7",
+      #         "MAX_TOKENS": "1000",
+      #         "MODEL": "gpt-4o"
+      #       }}'
