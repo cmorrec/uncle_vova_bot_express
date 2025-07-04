@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { IRequest } from "./schemas/interfaces";
 import requestModel from "./schemas/request.schema";
 
@@ -10,6 +11,12 @@ class RequestRepo {
 
   async getById(requestId: string): Promise<IRequest | null> {
     return requestModel.findOne({ requestId }).lean();
+  }
+
+  async removeOldRequest(sentBefore: DateTime) {
+    return await requestModel.deleteMany({
+      date: { $lt: sentBefore.toJSDate() },
+    });
   }
 }
 

@@ -19,6 +19,7 @@ import getChatGPT from "@chat-gpt";
 import { Telegraf } from "telegraf";
 import { saveReplyMessage } from "@middlewares";
 import { IChat, IMessage, IUser } from "@repo/index";
+import requestRepo from "@repo/request.repo";
 
 type ResultType = { answer: string; isFormal: boolean };
 
@@ -41,6 +42,7 @@ class AppService {
   // @Cron('0 0 17 * * *')
   // since we use lambda + api gateway
   async wakeUpChat() {
+    this.cleanRedundantInfo();
     const initDate = DateTime.local().minus({ days: 3 }).toJSDate();
     const chats = await chatRepo.getWakedUp();
 
@@ -271,6 +273,12 @@ class AppService {
 
   public getInformalMentions() {
     return this.INFORMAL_MENTIONS;
+  }
+
+  public async cleanRedundantInfo() {
+    const now = DateTime.now();
+    messageRepo.removeOldMessages(now.minus({ weeks: 2 }));
+    requestRepo.removeOldRequest(now.minus({ weeks: 5 }));
   }
 }
 
