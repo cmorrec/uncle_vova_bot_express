@@ -63,7 +63,7 @@ jobs:
       - name: Convert env to JSON
         id: make_env_json
         run: |
-          JSON="{"
+          JSON="{\"Variables\":{"
           for var in $(compgen -e); do
             if [[ "$var" =~ ^[A-Za-z0-9_]+$ ]]; then
               val="${!var}"
@@ -85,4 +85,4 @@ jobs:
         run: |
           aws lambda update-function-configuration \
             --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
-            --environment "Variables=${{ steps.make_env_json.outputs.json_env }}"
+            --environment "$(cat env.json)"
