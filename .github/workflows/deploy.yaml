@@ -82,7 +82,7 @@ jobs:
               exit 1
           fi
 
-          ENV_JSON=$(echo "$LAMBDA_ENV_VARS" | yq -o=json -I=0 '. | { Variables: . }')
+          ENV_JSON=$(echo "$LAMBDA_ENV_VARS" | yq eval -o=json '.' | jq '{ Variables: . }')
 
           aws lambda update-function-configuration \
             --function-name "$LAMBDA_FUNCTION_NAME" \
