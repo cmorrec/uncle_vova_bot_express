@@ -1,7 +1,7 @@
 Деплой
 0) для тестов можем перед тем как делать build изменить lambda на local в esbuild.config.js, но перед тем как собирать на отправку надо вернуть обратно 
 1) npm run build
-2) zip -r function.zip . -x '*.git*' '*.env' 'tests/*'
+2) zip function.zip index.js
 3) загружаем в lambda
 4) запускаем тест
 
