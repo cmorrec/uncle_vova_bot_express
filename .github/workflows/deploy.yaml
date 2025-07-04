@@ -55,26 +55,26 @@ jobs:
 
       - name: Update Lambda environment variables
         env:
-        LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
-        LAMBDA_ENV_VARS: |
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          OWNER_IDS: ${{ secrets.OWNER_IDS }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          WEBHOOK_DOMAIN: ${{ secrets.WEBHOOK_DOMAIN }}
-          WEBHOOK_SECRET_TOKEN: ${{ secrets.WEBHOOK_SECRET_TOKEN }}
+          LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
+          LAMBDA_ENV_VARS: |
+            MONGODB_URI: ${{ secrets.MONGODB_URI }}
+            TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+            OWNER_IDS: ${{ secrets.OWNER_IDS }}
+            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+            WEBHOOK_DOMAIN: ${{ secrets.WEBHOOK_DOMAIN }}
+            WEBHOOK_SECRET_TOKEN: ${{ secrets.WEBHOOK_SECRET_TOKEN }}
 
-          WEBHOOK_PATH: "/api/webhook"
-          TELEGRAM_BOT_USERNAME: "uncle_vova_ai_bot"
-          TELEGRAM_BOT_NAME: "Дядя Вова"
-          PORT: "8080"
-          DEFAULT_MINUS_MINUTES: "20"
-          MESSAGES_LIMIT: "3"
-          EVERY_NTH_MESSAGE: "15"
-          MIN_MESSAGE_LENGTH: "20"
-          TEMPERATURE: "0.7"
-          MAX_TOKENS: "1000"
-          MODEL: "gpt-4o"
+            WEBHOOK_PATH: "/api/webhook"
+            TELEGRAM_BOT_USERNAME: "uncle_vova_ai_bot"
+            TELEGRAM_BOT_NAME: "Дядя Вова"
+            PORT: "8080"
+            DEFAULT_MINUS_MINUTES: "20"
+            MESSAGES_LIMIT: "3"
+            EVERY_NTH_MESSAGE: "15"
+            MIN_MESSAGE_LENGTH: "20"
+            TEMPERATURE: "0.7"
+            MAX_TOKENS: "1000"
+            MODEL: "gpt-4o"
         run: |
           if ! command -v yq &> /dev/null
           then
