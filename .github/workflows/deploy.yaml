@@ -73,7 +73,6 @@ jobs:
           done
           JSON="${JSON%,}}"
           echo "$JSON" > env.json
-          echo "json_env=$JSON" >> $GITHUB_OUTPUT
 
       - name: Update Lambda code
         run: |
