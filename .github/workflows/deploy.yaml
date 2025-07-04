@@ -75,11 +75,11 @@ jobs:
           echo "$JSON" > env.json
           echo "json_env=$JSON" >> $GITHUB_OUTPUT
 
-      - name: Update Lambda code
-        run: |
-          aws lambda update-function-code \
-            --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
-            --zip-file fileb://function.zip
+      # - name: Update Lambda code
+      #   run: |
+      #     aws lambda update-function-code \
+      #       --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
+      #       --zip-file fileb://function.zip
 
       - name: Update Lambda environment variables
         run: |
