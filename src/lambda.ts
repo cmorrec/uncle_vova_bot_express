@@ -6,6 +6,7 @@ let cachedServer: ReturnType<typeof serverlessExpress> | null = null;
 
 exports.handler = async (event: any, context: any) => {
   if (event.source === "aws.events") {
+    console.log("Received event:", JSON.stringify(event));
     return await wakeUp();
   }
   if (!cachedServer) {
