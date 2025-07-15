@@ -5,9 +5,19 @@ import service from "@service";
 let cachedServer: ReturnType<typeof serverlessExpress> | null = null;
 
 exports.handler = async (event: any, context: any) => {
-  if (event.source === "aws.events") {
+  const isEventBridgeScheduled =
+    event?.source === "aws.events" &&
+    event?.["detail-type"] === "Scheduled Event";
+  if (isEventBridgeScheduled) {
     console.log("Received event:", JSON.stringify(event));
-    return await wakeUp();
+    await wakeUp();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: "wakeUp() executed from EventBridge Scheduler",
+      }),
+    };
   }
   if (!cachedServer) {
     const app = await createApp();
