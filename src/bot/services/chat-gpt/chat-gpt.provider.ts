@@ -24,7 +24,7 @@ export async function getCompletion(
 ): Promise<ChatGPTResponseToSave | undefined> {
   try {
     const response = await openai.completions.create({
-      model: MODEL,
+      model: 'davinci-002',
       prompt: requestText,
       temperature: TEMPERATURE,
       max_tokens: MAX_TOKENS,
