@@ -27,7 +27,7 @@ export async function getCompletion(
       model: 'davinci-002',
       prompt: requestText,
       temperature: TEMPERATURE,
-      max_tokens: MAX_TOKENS,
+      max_tokens: MAX_TOKENS / 5,
     });
 
     return {
