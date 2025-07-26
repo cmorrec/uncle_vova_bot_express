@@ -2,12 +2,7 @@ import { config } from "@config";
 import { MESSAGES_LIMIT, handleError, availableTextTypes } from "../../utils";
 import messageRepo from "@repo/message.repo";
 import requestRepo from "@repo/request.repo";
-import {
-  IMessage,
-  IUser,
-  IChat,
-  ChatGPTRequestType,
-} from "@repo/index";
+import { IMessage, IUser, IChat, ChatGPTRequestType } from "@repo/index";
 import userRepo from "@repo/user.repo";
 import {
   ChatCompletionRequestMessage,
@@ -149,12 +144,10 @@ async function getWakeupInput(input: {
       : ("createJoke" as const);
 
   return i18n.t(`wakeup.${req}`, {
-    args: {
-      description: input.description,
-      formal: !input.isFormal ? i18n.t("wakeup.informalRef") : "",
-      rude: rudeRequirements,
-      userDescription: userDescription,
-    },
+    description: input.description ?? "",
+    formal: !input.isFormal ? i18n.t("wakeup.informalRef") : "",
+    rude: rudeRequirements,
+    userDescription: userDescription,
   });
 }
 
@@ -214,9 +207,7 @@ function getRudeRequirements({
   isFormal: boolean;
   isRude?: boolean;
 }) {
-  return !isFormal && isRude
-    ? `(${i18n.t("rudeRequirements")})`
-    : "";
+  return !isFormal && isRude ? `(${i18n.t("rudeRequirements")})` : "";
 }
 
 async function getRandomUserDescription(
