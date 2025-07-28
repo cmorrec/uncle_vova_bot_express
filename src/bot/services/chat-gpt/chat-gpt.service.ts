@@ -11,6 +11,17 @@ import {
 } from "./chat-gpt.provider";
 import i18n from "@i18n";
 
+type Enumerate<
+  N extends number,
+  Acc extends number[] = []
+> = Acc["length"] extends N
+  ? [...Acc, N][number]
+  : Enumerate<N, [...Acc, Acc["length"]]>;
+
+type Range<End extends number> = Enumerate<End>;
+
+type UserInfo = { username: string; messages: string[] };
+
 type TextGenerationInput = {
   messages: (IMessage & { user: IUser })[];
   character?: IChat;
@@ -23,30 +34,19 @@ type MessageType = {
 };
 
 const MESSAGE_LENGTH_LIMIT = 836;
+const OPTION_NUMBER = 4 as const;
 
 export default async function getChatGPT(
   input: TextGenerationInput
 ): Promise<string | undefined> {
-  /**
-   * Дядя Вова - вредный глупый старик-алкоголик, который много матерится.
-   *
-   * Options:
-   *  1) text-davinchi vs chat-gpt3.5-turbo vs gpt-4o
-   *  2) completion vs chat vs fine-tune
-   *
-   * temperature = , top-p = , best of =
-   *            | text-davinci-003 | gpt-3.5-turbo | gpt-4o
-   * completion |                  |               |
-   * chat       |                  |               |
-   * fine-tune  |                  |               |
-   */
-
   const now = new Date();
 
   // Users should be able to ignore character by calling him a special way
+  // Informal - has character;
+  // Formal   - clean GPT, polite;
   const isFormal = isBotFormal(input);
   const botName = getBotName(isFormal);
-  const description = getDescription({ input, isFormal });
+  const description = getBotDescription({ input, isFormal });
   const userMessages = handleMessages(input.messages, isFormal);
   const assistantMessages: MessageType[] = isFormal
     ? []
@@ -99,7 +99,7 @@ async function requestChatGPT(input: {
   }
 
   if (input.type === ChatGPTRequestType.Completion) {
-    const description = getDescription({
+    const description = getBotDescription({
       input,
       isFormal: input.isFormal,
     });
@@ -120,17 +120,21 @@ async function requestChatGPT(input: {
   };
 }
 
-async function getWakeupInput(input: {
+export async function getWakeupInput(input: {
   character?: IChat;
   description: string;
   isFormal: boolean;
+  option?: Range<typeof OPTION_NUMBER>;
+  user?: UserInfo;
 }): Promise<string> {
   const rudeRequirements = getRudeRequirements({
     isFormal: input.isFormal,
     isRude: input.character?.botIsRude,
   });
-  const option = randomInteger(0, 4);
-  const userDescription = await getRandomUserDescription(input.character);
+  // TODO update it for clear testing
+  const option = input.option ?? randomInteger(0, OPTION_NUMBER);
+  const randomUser = input.user ?? (await getRandomUser(input.character));
+  const userDescription = getUserDescription(randomUser);
 
   const req =
     option === 0 && userDescription
@@ -151,7 +155,7 @@ async function getWakeupInput(input: {
   });
 }
 
-function getDescription({
+export function getBotDescription({
   isFormal,
   input,
 }: {
@@ -194,10 +198,10 @@ function getDefaultUserName(user: IUser): string {
     : defaultNames[3];
 }
 
-function randomInteger(min: number, max: number) {
+function randomInteger<T extends number>(min: number, max: T) {
   const rand = min + Math.random() * (max + 1 - min);
 
-  return Math.floor(rand);
+  return Math.floor(rand) as Range<T>;
 }
 
 function getRudeRequirements({
@@ -210,9 +214,7 @@ function getRudeRequirements({
   return !isFormal && isRude ? `(${i18n.t("rudeRequirements")})` : "";
 }
 
-async function getRandomUserDescription(
-  chat?: IChat
-): Promise<string | undefined> {
+async function getRandomUser(chat?: IChat): Promise<UserInfo | undefined> {
   if (!chat || !chat.chatMemberIds?.length) {
     return undefined;
   }
@@ -244,13 +246,22 @@ async function getRandomUserDescription(
     return undefined;
   }
 
-  const userDescription = `${username}. ${i18n.t(
-    "wakeup.userQuotesTransition"
-  )} ${username}:\n\n ${userMessages
-    .map((m) => `"${m.text ?? m.caption}"`)
-    .join("\n")}`;
+  return {
+    username,
+    messages: userMessages
+      .map((m) => m.text ?? m.caption)
+      .filter((m) => m !== undefined),
+  };
+}
 
-  return userDescription;
+function getUserDescription(user?: UserInfo) {
+  if (!user) {
+    return undefined;
+  }
+
+  return `${user.username}. ${i18n.t("wakeup.userQuotesTransition")} ${
+    user.username
+  }:\n\n ${user.messages.map((m) => `"${m}"`).join("\n")}`;
 }
 
 function getRole(isMainBotMessage: boolean): "assistant" | "user" {

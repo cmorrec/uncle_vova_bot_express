@@ -7,7 +7,7 @@
     "start:dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/local.ts",
     "build": "node esbuild.config.js",
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node --transpile-only -r tsconfig-paths/register test/wakeup-test.spec.ts"
   },
   "author": "",
   "license": "ISC",
