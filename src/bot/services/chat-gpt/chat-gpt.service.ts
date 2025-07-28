@@ -201,7 +201,7 @@ function getDefaultUserName(user: IUser): string {
 function randomInteger<T extends number>(min: number, max: T) {
   const rand = min + Math.random() * (max + 1 - min);
 
-  return Math.floor(rand) as Range<T>;
+  return Math.min(Math.floor(rand), max) as Range<T>;
 }
 
 function getRudeRequirements({
@@ -226,7 +226,7 @@ async function getRandomUser(chat?: IChat): Promise<UserInfo | undefined> {
     return undefined;
   }
 
-  const randomUser = users[randomInteger(0, users.length)];
+  const randomUser = users[randomInteger(0, users.length - 1)];
   if (!randomUser) {
     return undefined;
   }
