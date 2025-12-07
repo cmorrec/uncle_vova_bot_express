@@ -42,6 +42,7 @@ class AppService {
   // @Cron('0 0 17 * * *')
   // since we use lambda + api gateway
   async wakeUpChat() {
+    console.log("[AppService][wakeUpChat]", new Date());
     this.cleanRedundantInfo();
     const initDate = DateTime.local().minus({ days: 3 }).toJSDate();
     const chats = await chatRepo.getWakedUp();

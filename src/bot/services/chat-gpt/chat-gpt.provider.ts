@@ -22,29 +22,16 @@ const openai: OpenAI = new OpenAI(configuration);
 export async function getCompletion(
   requestText: string
 ): Promise<ChatGPTResponseToSave | undefined> {
-  try {
-    const response = await openai.completions.create({
-      model: MODEL,
-      prompt: requestText,
-      temperature: TEMPERATURE,
-      max_tokens: MAX_TOKENS,
-    });
-
-    return {
-      text: response.choices[0].text,
-      model: response.model,
-      usage: response.usage,
-    };
-  } catch (error) {
-    handleError(error);
-  }
-
-  return undefined;
+  return requestLLM([{ role: "user" as any, content: requestText }]);
 }
 
 export async function getChat(
   requestChat: ChatCompletionRequestMessage[]
 ): Promise<ChatGPTResponseToSave | undefined> {
+  return requestLLM(requestChat);
+}
+
+async function requestLLM(requestChat: ChatCompletionRequestMessage[]) {
   try {
     const response = await openai.chat.completions.create({
       model: MODEL,
