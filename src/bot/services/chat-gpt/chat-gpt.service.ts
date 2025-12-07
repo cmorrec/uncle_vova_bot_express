@@ -10,16 +10,7 @@ import {
   getCompletion,
 } from "./chat-gpt.provider";
 import i18n from "@i18n";
-import { randomInteger } from "src/bot/utils/random-integer";
-
-type Enumerate<
-  N extends number,
-  Acc extends number[] = []
-> = Acc["length"] extends N
-  ? [...Acc, N][number]
-  : Enumerate<N, [...Acc, Acc["length"]]>;
-
-type Range<End extends number> = Enumerate<End>;
+import { randomInteger, Range } from "src/bot/utils/random-integer";
 
 type UserInfo = { username: string; messages: string[] };
 
