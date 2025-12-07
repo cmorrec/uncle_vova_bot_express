@@ -22,8 +22,8 @@ export default function registerOnText(bot: TelegrafContext) {
         needSave: true,
       });
     }
-    config
-    if (trueWithProbability(0.1)) {
+
+    if (trueWithProbability(config.reactionProbability)) {
       await reactOnMessage({ctx: ctx as BotContext})
     }
   });
