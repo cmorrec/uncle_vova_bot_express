@@ -1,0 +1,92 @@
+import { DateTime } from "luxon";
+import { saveReplyMessage } from "./save-reply-message.middleware";
+import { BotContext } from "@types";
+import { randomInteger } from "../utils/random-integer";
+
+const POSSIBLE_REACTIONS = [
+  "👍",
+  "👎",
+  "❤",
+  "🔥",
+  "🥰",
+  "👏",
+  "😁",
+  "🤔",
+  "🤯",
+  "😱",
+  "🤬",
+  "😢",
+  "🎉",
+  "🤩",
+  "🤮",
+  "💩",
+  "🙏",
+  "👌",
+//   "🕊",
+  "🤡",
+  "🥱",
+  "🥴",
+  "😍",
+//   "🐳",
+  "❤‍🔥",
+  "🌚",
+  "🌭",
+  "💯",
+  "🤣",
+  "⚡",
+  "🍌",
+  "🏆",
+  "💔",
+  "🤨",
+  "😐",
+  "🍓",
+  "🍾",
+  "💋",
+  "🖕",
+  "😈",
+  "😴",
+  "😭",
+  "🤓",
+//   "👻",
+//   "👨‍💻",
+  "👀",
+  "🎃",
+  "🙈",
+  "😇",
+  "😨",
+  "🤝",
+  "✍",
+  "🤗",
+  "🫡",
+//   "🎅",
+//   "🎄",
+//   "☃",
+  "💅",
+  "🤪",
+//   "🗿",
+  "🆒",
+  "💘",
+  "🙉",
+  "🦄",
+  "😘",
+  "💊",
+  "🙊",
+  "😎",
+//   "👾",
+  "🤷‍♂",
+//   "🤷",
+//   "🤷‍♀",
+  "😡",
+] as const;
+
+export async function reactOnMessage({ ctx }: { ctx: BotContext }) {
+  const randomNum = randomInteger(0, POSSIBLE_REACTIONS.length - 1);
+  const emoji = POSSIBLE_REACTIONS[randomNum];
+  const succeed = await ctx.react(emoji);
+
+  console.info(
+    "React on Message: ",
+    `${emoji}: ${succeed ? "Success" : "Fail"}`,
+    "\n\n\n"
+  );
+}

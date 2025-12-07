@@ -10,6 +10,7 @@ import {
   getCompletion,
 } from "./chat-gpt.provider";
 import i18n from "@i18n";
+import { randomInteger } from "src/bot/utils/random-integer";
 
 type Enumerate<
   N extends number,
@@ -196,12 +197,6 @@ function getDefaultUserName(user: IUser): string {
     : lastDigits % 5 === 0
     ? defaultNames[2]
     : defaultNames[3];
-}
-
-function randomInteger<T extends number>(min: number, max: T) {
-  const rand = min + Math.random() * (max + 1 - min);
-
-  return Math.min(Math.floor(rand), max) as Range<T>;
 }
 
 function getRudeRequirements({

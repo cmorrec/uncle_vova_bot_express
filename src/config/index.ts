@@ -22,7 +22,8 @@ export const config = {
   everyNthMessage: Number(process.env.EVERY_NTH_MESSAGE!),
   minMessageLength: Number(process.env.MIN_MESSAGE_LENGTH!),
   maxTokens: Number(process.env.MAX_TOKENS!),
-  model: process.env.MODEL!
+  model: process.env.MODEL!,
+  reactionProbability: Number(process.env.REACTION_PROBABILITY ?? 0),
 };
 
 // validation

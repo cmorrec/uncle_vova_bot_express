@@ -1,7 +1,9 @@
 import { message } from "telegraf/filters";
 import { BotContext, Message, TelegrafContext } from "@types";
 import service from "@service";
-import { replyOnMessage, saveMessageMiddleware } from "@middlewares";
+import { reactOnMessage, replyOnMessage, saveMessageMiddleware } from "@middlewares";
+import { trueWithProbability } from "src/bot/utils/true-with-probability";
+import { config } from "@config";
 
 export default function registerOnText(bot: TelegrafContext) {
   bot.on(message("text"), async (ctx) => {
@@ -19,6 +21,10 @@ export default function registerOnText(bot: TelegrafContext) {
         isFormal: result.isFormal,
         needSave: true,
       });
+    }
+    config
+    if (trueWithProbability(0.1)) {
+      await reactOnMessage({ctx: ctx as BotContext})
     }
   });
 }
