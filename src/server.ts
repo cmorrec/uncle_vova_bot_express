@@ -26,13 +26,16 @@ export async function createApp() {
       await bot.createWebhook({
         domain: webhookDomain,
         path: webhookPath,
+        // allowed_updates: ['message', 'message_reaction', 'message_reaction_count'],
         // secret_token: config.webhook.secretToken,
       })
     );
     // app.use(webhookPath, (req, res) => bot.handleUpdate(req.body, res));
     console.log("Webhook set");
   } else {
-    bot.launch();
+    bot.launch(
+      // { allowedUpdates: ['message', 'message_reaction', 'message_reaction_count'] }
+    );
     console.log("Long-polling set");
   }
 
