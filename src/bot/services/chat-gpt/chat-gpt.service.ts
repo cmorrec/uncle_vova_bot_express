@@ -317,7 +317,7 @@ function getRequestType(
 
 export async function getChatGPTReaction(
   text: string,
-  possibleReactions: ReactionType[],
+  possibleReactions: readonly ReactionType[],
   character: IChat
 ): Promise<ReactionType | undefined> {
   const isFormal = false;

@@ -14,6 +14,12 @@ export const POPULAR_REACTIONS = [
   "🤝",
   "🤮",
   "💩",
+  "🥴",
+  "🍌",
+  "💔",
+  "🏆",
+  "🫡",
+  "😡",
 ] as const;
 
 export const UNPOPULAR_REACTIONS = [
@@ -28,16 +34,12 @@ export const UNPOPULAR_REACTIONS = [
   "👌",
   //   "🕊",
   "🥱",
-  "🥴",
   "😍",
   //   "🐳",
   "❤‍🔥",
   "🌚",
   "🌭",
   "⚡",
-  "🍌",
-  "🏆",
-  "💔",
   "🤨",
   "😐",
   "🍓",
@@ -55,7 +57,6 @@ export const UNPOPULAR_REACTIONS = [
   "😇",
   "😨",
   "🤗",
-  "🫡",
   //   "🎅",
   //   "🎄",
   //   "☃",
@@ -74,7 +75,6 @@ export const UNPOPULAR_REACTIONS = [
   "🤷‍♂",
   //   "🤷",
   //   "🤷‍♀",
-  "😡",
 ] as const;
 
 export const ALL_REACTIONS = [...POPULAR_REACTIONS, ...UNPOPULAR_REACTIONS];
