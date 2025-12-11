@@ -330,7 +330,8 @@ export async function getChatGPTReaction(
   };
   const requestType = ChatGPTRequestType.Chat;
   const requestMessage: MessageType = {
-    content: i18n.t("recieveReaction", {
+    content: i18n.t("receiveReaction", {
+      botName,
       message: text,
       reactions: possibleReactions.join(","),
     }),
