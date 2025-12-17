@@ -1,7 +1,11 @@
 import { message } from "telegraf/filters";
 import { BotContext, Message, TelegrafContext } from "@types";
 import service from "@service";
-import { reactOnMessage, replyOnMessage, saveMessageMiddleware } from "@middlewares";
+import {
+  reactOnMessage,
+  replyOnMessage,
+  saveMessageMiddleware,
+} from "@middlewares";
 import { trueWithProbability } from "src/bot/utils/true-with-probability";
 import { config } from "@config";
 
@@ -23,8 +27,8 @@ export default function registerOnText(bot: TelegrafContext) {
       });
     }
 
-    if (trueWithProbability(config.reactionProbability)) {
-      await reactOnMessage({ctx: ctx as BotContext})
+    if (updateDBInfo && trueWithProbability(config.reactionProbability)) {
+      await reactOnMessage({ ctx: ctx as BotContext, updateDBInfo });
     }
   });
 }

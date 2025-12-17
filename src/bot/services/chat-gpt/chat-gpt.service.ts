@@ -11,6 +11,7 @@ import {
 } from "./chat-gpt.provider";
 import i18n from "@i18n";
 import { randomInteger, Range } from "src/bot/utils/random-integer";
+import { ALL_REACTIONS, ReactionType } from "src/bot/utils/reactions";
 
 type UserInfo = { username: string; messages: string[] };
 
@@ -46,12 +47,27 @@ export default async function getChatGPT(
   const promptMessages = [...assistantMessages, ...userMessages];
   const type = getRequestType(input);
 
+  return getResponseFromChatGPT({
+    isFormal,
+    messages: promptMessages,
+    type,
+    character: input.character,
+  });
+}
+
+async function getResponseFromChatGPT(input: {
+  type: ChatGPTRequestType;
+  messages: MessageType[];
+  character?: IChat;
+  isFormal: boolean;
+}): Promise<string | undefined> {
+  const now = new Date();
   try {
     const { chatRequest, completionRequest, response } = await requestChatGPT({
-      type,
-      messages: promptMessages,
+      type: input.type,
+      messages: input.messages,
       character: input.character,
-      isFormal,
+      isFormal: input.isFormal,
     });
 
     await requestRepo.create({
@@ -59,7 +75,7 @@ export default async function getChatGPT(
       completionRequest,
       response,
       date: now,
-      type: type!,
+      type: input.type,
     });
 
     return response?.text;
@@ -67,9 +83,9 @@ export default async function getChatGPT(
     handleError(e);
 
     await requestRepo.create({
-      chatRequest: promptMessages,
+      chatRequest: input.messages,
       date: now,
-      type: type!,
+      type: input.type,
       error: e,
     });
   }
@@ -297,4 +313,43 @@ function getRequestType(
   return input.mode === "wakeup"
     ? ChatGPTRequestType.Completion
     : ChatGPTRequestType.Chat;
+}
+
+export async function getChatGPTReaction(
+  text: string,
+  possibleReactions: readonly ReactionType[],
+  character: IChat
+): Promise<ReactionType | undefined> {
+  const isFormal = false;
+  const description = getBotDescription({ isFormal, input: { character } });
+  const botName = getBotName(isFormal);
+  const assistantMessages: MessageType = {
+    content: description,
+    name: botName,
+    role: "assistant",
+  };
+  const requestType = ChatGPTRequestType.Chat;
+  const requestMessage: MessageType = {
+    content: i18n.t("receiveReaction", {
+      botName,
+      message: text,
+      reactions: possibleReactions.join(","),
+    }),
+    name: "System",
+    role: "user",
+  };
+  const messages = [assistantMessages, requestMessage];
+
+  const response = await getResponseFromChatGPT({
+    isFormal,
+    messages,
+    type: requestType,
+    character,
+  });
+
+  if (response && ALL_REACTIONS.includes(response as ReactionType)) {
+    return response as ReactionType;
+  }
+
+  return undefined;
 }

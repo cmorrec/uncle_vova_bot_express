@@ -20,6 +20,7 @@ import { Telegraf } from "telegraf";
 import { saveReplyMessage } from "@middlewares";
 import { IChat, IMessage, IUser } from "@repo/index";
 import requestRepo from "@repo/request.repo";
+import { extractText } from "src/bot/utils/extract-text";
 
 type ResultType = { answer: string; isFormal: boolean };
 
@@ -80,13 +81,8 @@ class AppService {
   }
 
   async getAnswer(updateDBInfo: UpdateDBInfo): Promise<ResultType | undefined> {
-    const { message } = updateDBInfo;
-    const text = message?.text ?? message?.caption;
-    if (
-      !message ||
-      !text ||
-      !availableTextTypes.includes(message.messageType)
-    ) {
+    const text = extractText(updateDBInfo);
+    if (!text) {
       return undefined;
     }
 
