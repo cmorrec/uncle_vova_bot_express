@@ -8,7 +8,6 @@ export const POPULAR_REACTIONS = [
   "🤬",
   "💯",
   "🤣",
-  "🤡",
   "🖕",
   "✍",
   "🤝",
@@ -24,6 +23,7 @@ export const POPULAR_REACTIONS = [
 
 export const UNPOPULAR_REACTIONS = [
   "🥰",
+  "🤡",
   "👏",
   "🤯",
   "😱",
